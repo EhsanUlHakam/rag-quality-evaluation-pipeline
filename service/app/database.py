@@ -151,4 +151,3 @@ class EvaluationDatabase:
         with self.connect() as connection:
             connection.execute("DELETE FROM evaluation_results")
             connection.execute("DELETE FROM evaluation_runs")
-

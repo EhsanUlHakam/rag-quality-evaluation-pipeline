@@ -86,4 +86,3 @@ Offline evaluation uses a controlled versioned dataset to compare releases. Prod
 - Baselines act like approved snapshots.
 - Failure categories direct debugging to retrieval, generation, citation, or infrastructure.
 - Statistical and heuristic signals replace the assumption that one exact output string is always correct.
-

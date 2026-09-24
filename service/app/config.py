@@ -25,4 +25,3 @@ def load_quality_gates() -> dict[str, Any]:
     with QUALITY_GATES_PATH.open("r", encoding="utf-8") as handle:
         value = yaml.safe_load(handle) or {}
     return value["quality_gates"]
-

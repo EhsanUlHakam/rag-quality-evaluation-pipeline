@@ -17,4 +17,3 @@ $response = Invoke-RestMethod `
 $response | Select-Object run_id, name, gate_status, ci_exit_code, metrics, violations | ConvertTo-Json -Depth 10
 Write-Host "Baseline gate: $($response.gate_status)" -ForegroundColor Cyan
 exit $response.ci_exit_code
-

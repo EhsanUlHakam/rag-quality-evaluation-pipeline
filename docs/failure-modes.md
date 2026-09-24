@@ -14,4 +14,3 @@ These faults are controlled test inputs. They are not claims about real LLM fail
 ## Retry versus correctness
 
 Transient HTTP failures may be retried. A semantically unsupported answer should not be retried until it passes; that would hide nondeterminism and bias results. Record the failure, diagnose it, and change retrieval, prompts, data, or model behavior deliberately.
-

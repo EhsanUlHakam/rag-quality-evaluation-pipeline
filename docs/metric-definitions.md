@@ -25,4 +25,3 @@ A correct source with a bad answer is a generation failure. A polished answer ba
 ## LLM-as-a-judge
 
 It is intentionally absent from the default gate. A future judge can score semantics or style, but it introduces model bias, prompt sensitivity, nondeterminism, provider cost, and possible preference for fluent unsupported answers. It should supplement—not replace—deterministic checks.
-

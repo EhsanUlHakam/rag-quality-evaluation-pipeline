@@ -211,4 +211,3 @@ def report(run_id: str, format_name: Literal["json", "csv", "md", "html"]):
 def reset() -> dict[str, bool]:
     database.reset()
     return {"reset": True}
-

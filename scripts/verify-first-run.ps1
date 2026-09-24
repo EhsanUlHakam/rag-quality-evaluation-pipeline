@@ -41,4 +41,3 @@ Write-Host "[7/7] Verification summary..." -ForegroundColor Cyan
 } | Format-List
 
 Write-Host "VERIFIED: deterministic PASS, deterministic FAIL, regression comparison, reports, and SQLite persistence." -ForegroundColor Green
-

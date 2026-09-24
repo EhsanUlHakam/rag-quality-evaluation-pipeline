@@ -110,4 +110,3 @@ Document-level authorization, PII redaction, prompt-injection defenses, secret m
 ## Honest limitations
 
 This is a deterministic local demonstration using fictional documents. It does not prove production accuracy, semantic understanding, real provider cost, or business impact. The groundedness and token metrics are heuristics and are labeled accordingly.
-

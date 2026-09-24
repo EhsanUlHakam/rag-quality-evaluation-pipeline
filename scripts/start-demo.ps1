@@ -21,4 +21,3 @@ for ($attempt = 1; $attempt -le 30; $attempt++) {
 Invoke-RestMethod "http://localhost:8003/health" | ConvertTo-Json
 Write-Host "RAG API: http://localhost:8003/docs" -ForegroundColor Green
 Write-Host "n8n:     http://localhost:5681" -ForegroundColor Green
-

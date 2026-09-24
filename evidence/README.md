@@ -14,4 +14,3 @@ Recommended filenames:
 - `08-github-actions-success.png`
 
 Before committing screenshots, crop unrelated applications, browser accounts, bookmarks, file paths containing private names, and any credentials.
-

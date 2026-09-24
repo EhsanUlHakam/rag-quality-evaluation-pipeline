@@ -93,4 +93,3 @@ def generate_reports(run: dict[str, Any], reports_dir: Path) -> dict[str, str]:
 <p><em>Groundedness is a token-overlap heuristic and must not be treated as confirmed truth.</em></p></body></html>"""
     Path(paths["html"]).write_text(document, encoding="utf-8")
     return paths
-

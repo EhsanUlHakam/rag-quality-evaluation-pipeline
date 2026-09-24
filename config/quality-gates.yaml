@@ -9,4 +9,3 @@ quality_gates:
   maximum:
     error_rate: 0.10
     average_latency_ms: 500
-

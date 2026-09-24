@@ -33,4 +33,3 @@ The answer generator is treated as an untrusted system under test. It cannot dec
 ## Docker routing
 
 The Windows host uses `localhost:8003` and `localhost:5681`. Inside Compose, n8n calls `http://rag-service:8003`; container-local `localhost` would point back to the n8n container.
-

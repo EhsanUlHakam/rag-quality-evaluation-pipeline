@@ -74,4 +74,3 @@ Increasing top-k can improve recall while increasing prompt size, latency, and m
 ## Upgrade story
 
 The deterministic components are interfaces, not dead ends. Replace TF-IDF with a hybrid semantic retriever and the extractive generator with Ollama or a hosted model. Keep the dataset, evidence schema, evaluator, regression comparison, audit store, and gates so the upgraded system remains measurable.
-

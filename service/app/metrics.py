@@ -95,4 +95,3 @@ def compare_runs(baseline: dict[str, Any], candidate: dict[str, Any]) -> dict[st
         "metric_deltas": metric_deltas,
         "per_question": cases,
     }
-

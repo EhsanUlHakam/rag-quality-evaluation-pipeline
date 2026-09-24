@@ -41,4 +41,3 @@ Exit condition: weaker chunking/top-k settings produce visible regression eviden
 - Capture portfolio evidence and prepare GitHub/Upwork copy.
 
 Optional Ollama, embeddings, dashboards, and hosted providers begin only after these exit conditions pass.
-

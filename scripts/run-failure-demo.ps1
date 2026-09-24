@@ -31,4 +31,3 @@ $response | Select-Object run_id, gate_status, metrics, violations | ConvertTo-J
 $failedCases | Format-Table -AutoSize
 Write-Host "The failures above are intentional evidence that the evaluator catches controlled faults." -ForegroundColor Yellow
 exit $response.ci_exit_code
-

@@ -1,2 +1,1 @@
 """RAG quality evaluation service."""
-

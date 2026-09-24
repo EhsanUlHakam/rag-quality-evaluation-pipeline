@@ -85,4 +85,3 @@ def chunk_documents(
             if end == len(words):
                 break
     return chunks
-

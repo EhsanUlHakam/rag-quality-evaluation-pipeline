@@ -18,4 +18,3 @@ $response | Select-Object run_id, name, gate_status, ci_exit_code, metrics, viol
 Write-Host "Candidate gate: $($response.gate_status)" -ForegroundColor Cyan
 Write-Host "A non-zero exit code is expected when the quality gate detects regression." -ForegroundColor Yellow
 exit $response.ci_exit_code
-

@@ -13,4 +13,3 @@ c = sqlite3.connect("/app/data/rag-evaluation.db")
 print(c.execute("select name from sqlite_master where type='table' order by name").fetchall())
 '@
 docker.exe compose exec rag-service python -c $pythonCode
-

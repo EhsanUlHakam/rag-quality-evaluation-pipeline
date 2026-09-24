@@ -31,4 +31,3 @@ missing = sorted(set(names) - reachable)
 if missing:
     raise SystemExit(f"Unreachable workflow nodes: {missing}")
 print(f"Workflow JSON valid: {len(nodes)} unique and reachable nodes.")
-

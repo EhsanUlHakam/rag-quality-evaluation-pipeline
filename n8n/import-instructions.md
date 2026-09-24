@@ -32,4 +32,3 @@ Create and connect these nodes in order:
 ## Error behavior
 
 The RAG and case-evaluation requests retry three times. They continue their regular output on terminal HTTP failure so that **Aggregate Case Evidence** can detect incomplete evidence and fail explicitly instead of silently producing a misleading PASS.
-

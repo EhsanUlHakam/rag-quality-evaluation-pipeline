@@ -27,4 +27,3 @@ jobs:
 
       - name: Validate n8n workflow JSON
         run: python scripts/validate-workflow.py
-
