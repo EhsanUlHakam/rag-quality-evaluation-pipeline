@@ -1,0 +1,144 @@
+{
+  "name": "RAG Quality Evaluation and Regression Pipeline",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-880, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { name: `n8n-baseline-${new Date().toISOString()}`, chunk_size: 90, overlap: 15, top_k: 3, scenario: 'good', set_as_baseline: false } }];"
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b002",
+      "name": "Run Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-660, 160]
+    },
+    {
+      "parameters": {
+        "url": "http://rag-service:8003/api/v1/dataset",
+        "options": {}
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b003",
+      "name": "Load Evaluation Dataset",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-440, 160],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = $('Run Configuration').first().json; const cases = Array.isArray($json.cases) ? $json.cases : []; if (cases.length === 0) throw new Error('Evaluation dataset is empty'); return cases.map(testCase => ({ json: { ...config, case: testCase } }));"
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b004",
+      "name": "Iterate Test Cases",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-220, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://rag-service:8003/api/v1/rag/query",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ question: $json.case.question, case_id: $json.case.id, chunk_size: $json.chunk_size, overlap: $json.overlap, top_k: $json.top_k, scenario: $json.scenario }) }}",
+        "options": {}
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b005",
+      "name": "Call RAG Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [0, 160],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://rag-service:8003/api/v1/evaluation/case",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ case_id: $json.case_id, response: $json }) }}",
+        "options": {}
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b006",
+      "name": "Evaluate Case",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 160],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const config = $('Run Configuration').first().json; const results = $input.all().map(item => item.json); const invalid = results.filter(item => !item.case || !item.metrics); if (invalid.length) throw new Error(`${invalid.length} case evaluation(s) failed before aggregation`); return [{ json: { name: config.name, parameters: { chunk_size: config.chunk_size, overlap: config.overlap, top_k: config.top_k, scenario: config.scenario }, results, set_as_baseline: config.set_as_baseline } }];"
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b007",
+      "name": "Aggregate Case Evidence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://rag-service:8003/api/v1/evaluation/runs/from-results",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b008",
+      "name": "Store Aggregate Gate and Reports",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 160],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { accepted: true, run_id: $json.run_id, run_name: $json.name, quality_gate: $json.gate_status, threshold_violations: $json.violations, aggregate_metrics: $json.metrics, report_paths: $json.report_paths, ci_exit_code: $json.ci_exit_code } }];"
+      },
+      "id": "8f22c870-5f41-4f60-9c5d-e7b05407b009",
+      "name": "Evaluation Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 160]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {"main": [[{"node": "Run Configuration", "type": "main", "index": 0}]]},
+    "Run Configuration": {"main": [[{"node": "Load Evaluation Dataset", "type": "main", "index": 0}]]},
+    "Load Evaluation Dataset": {"main": [[{"node": "Iterate Test Cases", "type": "main", "index": 0}]]},
+    "Iterate Test Cases": {"main": [[{"node": "Call RAG Endpoint", "type": "main", "index": 0}]]},
+    "Call RAG Endpoint": {"main": [[{"node": "Evaluate Case", "type": "main", "index": 0}]]},
+    "Evaluate Case": {"main": [[{"node": "Aggregate Case Evidence", "type": "main", "index": 0}]]},
+    "Aggregate Case Evidence": {"main": [[{"node": "Store Aggregate Gate and Reports", "type": "main", "index": 0}]]},
+    "Store Aggregate Gate and Reports": {"main": [[{"node": "Evaluation Summary", "type": "main", "index": 0}]]}
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "8f22c870-5f41-4f60-9c5d-e7b05407b010",
+  "meta": {"templateCredsSetupCompleted": true},
+  "tags": []
+}
+

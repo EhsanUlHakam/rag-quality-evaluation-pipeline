@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "company": "LumenDesk",
+  "cases": [
+    {
+      "id": "rag-001",
+      "question": "How much does the Pro plan cost per user each month?",
+      "expected_source_id": "subscription_plans",
+      "expected_answer_facts": ["$49", "per user per month"],
+      "answerable": true,
+      "expected_behavior": "Answer with the documented monthly Pro price and cite subscription_plans.",
+      "category": "plans",
+      "difficulty": "direct",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-002",
+      "question": "What discount is applied to annual subscriptions?",
+      "expected_source_id": "subscription_plans",
+      "expected_answer_facts": ["15% discount", "annual subscriptions"],
+      "answerable": true,
+      "expected_behavior": "Return the annual discount without inventing other promotions.",
+      "category": "plans",
+      "difficulty": "direct",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-003",
+      "question": "Can a customer receive a refund for a monthly subscription payment?",
+      "expected_source_id": "refund_policy",
+      "expected_answer_facts": ["monthly subscription payments are non-refundable"],
+      "answerable": true,
+      "expected_behavior": "State that monthly payments are non-refundable.",
+      "category": "billing",
+      "difficulty": "direct",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-004",
+      "question": "What are the eligibility window and processing time for a first annual subscription refund?",
+      "expected_source_id": "refund_policy",
+      "expected_answer_facts": ["within 30 calendar days", "5 to 10 business days"],
+      "answerable": true,
+      "expected_behavior": "Include both the eligibility window and refund processing time.",
+      "category": "billing",
+      "difficulty": "multi-fact",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-005",
+      "question": "How is customer data protected at rest and while in transit?",
+      "expected_source_id": "security_data_retention",
+      "expected_answer_facts": ["AES-256 at rest", "TLS 1.3 in transit"],
+      "answerable": true,
+      "expected_behavior": "Return both documented encryption controls.",
+      "category": "security",
+      "difficulty": "multi-fact",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-006",
+      "question": "How long after workspace closure is active customer data scheduled for deletion?",
+      "expected_source_id": "security_data_retention",
+      "expected_answer_facts": ["within 30 days"],
+      "answerable": true,
+      "expected_behavior": "Distinguish closed-workspace deletion from backup retention.",
+      "category": "retention",
+      "difficulty": "ambiguous-terminology",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-007",
+      "question": "Which plans support SAML single sign-on?",
+      "expected_source_id": "sso_account_access",
+      "expected_answer_facts": ["Pro and Enterprise plans", "SAML 2.0"],
+      "answerable": true,
+      "expected_behavior": "Name only the documented SAML plans.",
+      "category": "access",
+      "difficulty": "direct",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-008",
+      "question": "What happens after five failed password attempts?",
+      "expected_source_id": "sso_account_access",
+      "expected_answer_facts": ["lock a local account", "15 minutes"],
+      "answerable": true,
+      "expected_behavior": "Describe the local-account lockout rule.",
+      "category": "access",
+      "difficulty": "direct",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-009",
+      "question": "For an Enterprise Priority 1 incident, when is support available and what is the initial response target?",
+      "expected_source_id": "support_service_levels",
+      "expected_answer_facts": ["24 hours a day, seven days a week", "one-hour initial response target"],
+      "answerable": true,
+      "expected_behavior": "Return both coverage and the P1 response target.",
+      "category": "support",
+      "difficulty": "multi-fact",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-010",
+      "question": "Are account audit records and encrypted backups kept for the same length of time?",
+      "expected_source_id": "security_data_retention",
+      "expected_answer_facts": ["backups are retained for 35 days", "audit logs are retained for 12 months"],
+      "answerable": true,
+      "expected_behavior": "Contrast the two retention periods; this case exposes weak small-chunk retrieval.",
+      "category": "retention",
+      "difficulty": "weak-retrieval-probe",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-011",
+      "question": "Does LumenDesk provide a native Salesforce integration?",
+      "expected_source_id": null,
+      "expected_answer_facts": [],
+      "answerable": false,
+      "expected_behavior": "Refuse to answer because the supplied knowledge base does not document Salesforce integration.",
+      "category": "unanswerable",
+      "difficulty": "unanswerable",
+      "max_latency_ms": 500
+    },
+    {
+      "id": "rag-012",
+      "question": "Does the Starter plan include round-the-clock phone support?",
+      "expected_source_id": "support_service_levels",
+      "expected_answer_facts": ["email support Monday through Friday", "09:00 to 17:00 UTC"],
+      "answerable": true,
+      "expected_behavior": "Use the documented Starter support schedule and do not claim 24/7 phone support.",
+      "category": "support",
+      "difficulty": "unsupported-claim-probe",
+      "max_latency_ms": 500
+    }
+  ]
+}
+

@@ -1,0 +1,12 @@
+quality_gates:
+  minimum:
+    retrieval_hit_rate_at_k: 0.90
+    fact_coverage: 0.80
+    citation_validity: 0.90
+    answerability_handling: 0.90
+    groundedness_heuristic: 0.75
+    overall_pass_rate: 0.75
+  maximum:
+    error_rate: 0.10
+    average_latency_ms: 500
+

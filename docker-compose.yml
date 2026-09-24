@@ -1,0 +1,49 @@
+services:
+  rag-service:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    ports:
+      - "${RAG_SERVICE_PORT:-8003}:8003"
+    environment:
+      DATA_DIR: /app/data
+      DATABASE_PATH: /app/data/rag-evaluation.db
+      REPORTS_DIR: /app/reports
+      KNOWLEDGE_BASE_DIR: /app/knowledge-base
+      EVAL_DATASET_PATH: /app/evaluation-data/eval_dataset.json
+      QUALITY_GATES_PATH: /app/config/quality-gates.yaml
+    volumes:
+      - rag-evaluation-data:/app/data
+      - ./reports:/app/reports
+      - ./knowledge-base:/app/knowledge-base:ro
+      - ./evaluation-data:/app/evaluation-data:ro
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.36.7
+    ports:
+      - "${N8N_PORT:-5681}:5678"
+    environment:
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:${N8N_PORT:-5681}/
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-Asia/Karachi}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+    volumes:
+      - n8n-rag-data:/home/node/.n8n
+    depends_on:
+      rag-service:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  rag-evaluation-data:
+  n8n-rag-data:

@@ -1,0 +1,30 @@
+name: RAG Evaluation Verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deterministic-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r service/requirements.txt
+
+      - name: Unit tests
+        env:
+          PYTHONPATH: service
+        run: python -m pytest service/tests -q
+
+      - name: Validate n8n workflow JSON
+        run: python scripts/validate-workflow.py
+
